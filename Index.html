@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amar Desh Telecom (v53)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Hind Siliguri) -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f1f5f9; font-size: 16px; }
+        .tab-btn.active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: bold; }
+        .filter-btn.active { background-color: #0d9488; color: white; font-weight: bold; }
+    </style>
+</head>
+<body class="pb-12 text-gray-900">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-wide"><i class="fa-solid fa-bolt-lightning mr-2"></i>Amar Desh Telecom</h1>
+                <p class="text-xs sm:text-sm text-teal-100">MFS ও ডিজিটাল লেজার ম্যানেজমেন্ট (v53)</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleCalculator()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm px-3 py-2 rounded-lg shadow transition flex items-center gap-1 font-bold">
+                    <i class="fa-solid fa-calculator"></i> ক্যালকুলেটর
+                </button>
+                <button onclick="resetData()" class="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm px-3 py-2 rounded-lg shadow transition font-bold">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> রিসেট
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-3 sm:p-4 space-y-4">
+
+        <!-- Floating Live Calculator Modal -->
+        <div id="calculator-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs p-4 relative">
+                <div class="flex justify-between items-center mb-3 border-b pb-2">
+                    <h3 class="font-bold text-gray-800 text-base"><i class="fa-solid fa-calculator text-amber-500 mr-1"></i> লাইভ হিসাব ক্যালকুলেটর</h3>
+                    <button onclick="toggleCalculator()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-xl mb-3 text-right">
+                    <div id="calc-expression" class="text-xs text-gray-500 h-4 overflow-hidden"></div>
+                    <div id="calc-display" class="text-2xl font-bold text-gray-800 truncate">0</div>
+                </div>
+                <div class="grid grid-cols-4 gap-2 text-base font-bold">
+                    <button onclick="calcClear()" class="bg-red-100 text-red-600 p-3 rounded-lg col-span-2 hover:bg-red-200">AC</button>
+                    <button onclick="calcBackspace()" class="bg-gray-200 text-gray-700 p-3 rounded-lg hover:bg-gray-300"><i class="fa-solid fa-backspace"></i></button>
+                    <button onclick="calcInput('/')" class="bg-indigo-100 text-indigo-600 p-3 rounded-lg hover:bg-indigo-200">÷</button>
+                    
+                    <button onclick="calcInput('7')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">7</button>
+                    <button onclick="calcInput('8')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">8</button>
+                    <button onclick="calcInput('9')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">9</button>
+                    <button onclick="calcInput('*')" class="bg-indigo-100 text-indigo-600 p-3 rounded-lg hover:bg-indigo-200">×</button>
+                    
+                    <button onclick="calcInput('4')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">4</button>
+                    <button onclick="calcInput('5')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">5</button>
+                    <button onclick="calcInput('6')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">6</button>
+                    <button onclick="calcInput('-')" class="bg-indigo-100 text-indigo-600 p-3 rounded-lg hover:bg-indigo-200">-</button>
+                    
+                    <button onclick="calcInput('1')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">1</button>
+                    <button onclick="calcInput('2')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">2</button>
+                    <button onclick="calcInput('3')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">3</button>
+                    <button onclick="calcInput('+')" class="bg-indigo-100 text-indigo-600 p-3 rounded-lg hover:bg-indigo-200">+</button>
+                    
+                    <button onclick="calcInput('0')" class="bg-gray-100 text-gray-800 p-3 rounded-lg col-span-2 hover:bg-gray-200">0</button>
+                    <button onclick="calcInput('.')" class="bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200">.</button>
+                    <button onclick="calcEqual()" class="bg-emerald-600 text-white p-3 rounded-lg hover:bg-emerald-700">=</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Overall Net Balance Card -->
+        <div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-700 rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl"><i class="fa-solid fa-wallet"></i></div>
+            <p class="text-sm sm:text-base font-bold text-blue-100"><i class="fa-solid fa-coins mr-1"></i> লাইভ সর্বমোট মূলধন (হাতে নগদ MFS ক্যাশ + মোট MFS)</p>
+            <h2 id="total-net-balance" class="text-3xl sm:text-4xl font-extrabold mt-1 tracking-tight">৳ 0</h2>
+            <div class="mt-4 pt-3 border-t border-indigo-400/30 flex justify-between items-center text-xs sm:text-sm text-indigo-100 font-semibold">
+                <span class="flex items-center gap-1">
+                    হাতে নগদ ক্যাশ (+): <strong id="top-cash-on-hand" class="text-emerald-300 text-base">৳ 0</strong>
+                    <button onclick="setCashOnHandPrompt()" class="ml-2 bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-200 text-xs px-2.5 py-1 rounded border border-emerald-400/40 font-bold">
+                        <i class="fa-solid fa-pen"></i> ক্যাশ সেট
+                    </button>
+                </span>
+                <span>মোট MFS জমা: <strong id="top-mfs-total" class="text-amber-300 text-base">৳ 0</strong></span>
+            </div>
+        </div>
+
+        <!-- MFS Wallet Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-pink-600 text-white p-3.5 rounded-xl shadow relative flex flex-col justify-between">
+                <div>
+                    <span class="text-xs sm:text-sm font-bold block opacity-90"><i class="fa-solid fa-mobile-screen mr-1"></i> বিকাশ ব্যালেন্স</span>
+                    <span id="bal-bkash" class="text-xl sm:text-2xl font-extrabold block mt-1">৳ 0</span>
+                </div>
+                <button onclick="setBalancePrompt('bkash')" class="mt-3 text-xs sm:text-sm bg-white/20 hover:bg-white/30 text-white font-bold py-1.5 px-2 rounded-lg w-full flex items-center justify-center gap-1 border border-white/30">
+                    <i class="fa-solid fa-sliders"></i> বিকাশ সেট
+                </button>
+            </div>
+            <div class="bg-orange-600 text-white p-3.5 rounded-xl shadow relative flex flex-col justify-between">
+                <div>
+                    <span class="text-xs sm:text-sm font-bold block opacity-90"><i class="fa-solid fa-mobile-screen mr-1"></i> নগদ ব্যালেন্স</span>
+                    <span id="bal-nagad" class="text-xl sm:text-2xl font-extrabold block mt-1">৳ 0</span>
+                </div>
+                <button onclick="setBalancePrompt('nagad')" class="mt-3 text-xs sm:text-sm bg-white/20 hover:bg-white/30 text-white font-bold py-1.5 px-2 rounded-lg w-full flex items-center justify-center gap-1 border border-white/30">
+                    <i class="fa-solid fa-sliders"></i> নগদ সেট
+                </button>
+            </div>
+            <div class="bg-purple-700 text-white p-3.5 rounded-xl shadow relative flex flex-col justify-between">
+                <div>
+                    <span class="text-xs sm:text-sm font-bold block opacity-90"><i class="fa-solid fa-mobile-screen mr-1"></i> রকেট ব্যালেন্স</span>
+                    <span id="bal-rocket" class="text-xl sm:text-2xl font-extrabold block mt-1">৳ 0</span>
+                </div>
+                <button onclick="setBalancePrompt('rocket')" class="mt-3 text-xs sm:text-sm bg-white/20 hover:bg-white/30 text-white font-bold py-1.5 px-2 rounded-lg w-full flex items-center justify-center gap-1 border border-white/30">
+                    <i class="fa-solid fa-sliders"></i> রকেট সেট
+                </button>
+            </div>
+            <div class="bg-amber-600 text-white p-3.5 rounded-xl shadow relative flex flex-col justify-between">
+                <div>
+                    <span class="text-xs sm:text-sm font-bold block opacity-90"><i class="fa-solid fa-mobile-screen mr-1"></i> উপায় ব্যালেন্স</span>
+                    <span id="bal-upay" class="text-xl sm:text-2xl font-extrabold block mt-1">৳ 0</span>
+                </div>
+                <button onclick="setBalancePrompt('upay')" class="mt-3 text-xs sm:text-sm bg-white/20 hover:bg-white/30 text-white font-bold py-1.5 px-2 rounded-lg w-full flex items-center justify-center gap-1 border border-white/30">
+                    <i class="fa-solid fa-sliders"></i> উপায় সেট
+                </button>
+            </div>
+        </div>
+
+        <!-- Metric Cards Grid (9 Cards) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-white p-4 rounded-xl border-l-4 border-emerald-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> ম্যানুয়াল হাতে কমিশন</p>
+                <h4 id="stat-manual-commission" class="text-xl sm:text-2xl font-extrabold text-emerald-700 mt-1">৳ 0</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl border-l-4 border-teal-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-sack-dollar text-teal-600"></i> মোট কমিশন/লাভ</p>
+                <h4 id="stat-total-profit" class="text-xl sm:text-2xl font-extrabold text-teal-700 mt-1">৳ 0</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl border-l-4 border-blue-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-line text-blue-600"></i> আজকের নিট লাভ</p>
+                <h4 id="stat-today-profit" class="text-xl sm:text-2xl font-extrabold text-blue-600 mt-1">৳ 0</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl border-l-4 border-purple-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-pie text-purple-600"></i> মোট ব্যক্তিগত বিনিয়োগ</p>
+                <h4 id="stat-personal-invest" class="text-xl sm:text-2xl font-extrabold text-purple-700 mt-1">৳ 0</h4>
+            </div>
+
+            <!-- Card for Personal Investment Profit / Dividend -->
+            <div class="bg-white p-4 rounded-xl border-l-4 border-emerald-600 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-arrow-trend-up text-emerald-600"></i> ব্যক্তিগত বিনিয়োগের লাভ</p>
+                <h4 id="stat-personal-dividend" class="text-xl sm:text-2xl font-extrabold text-emerald-700 mt-1">৳ 0</h4>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-house-user text-red-600"></i> সংসার খরচ</p>
+                <h4 id="stat-family-exp" class="text-xl sm:text-2xl font-extrabold text-red-600 mt-1">৳ 0</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl border-l-4 border-amber-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-store text-amber-600"></i> দোকান খরচ</p>
+                <h4 id="stat-shop-exp" class="text-xl sm:text-2xl font-extrabold text-amber-600 mt-1">৳ 0</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl border-l-4 border-indigo-500 shadow-sm flex flex-col justify-between">
+                <p class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1"><i class="fa-solid fa-wallet text-indigo-600"></i> ব্যক্তিগত আয়</p>
+                <h4 id="stat-personal-income" class="text-xl sm:text-2xl font-extrabold text-indigo-700 mt-1">৳ 0</h4>
+            </div>
+            <!-- Customizable Card -->
+            <div class="bg-white p-4 rounded-xl border-l-4 border-cyan-500 shadow-sm flex flex-col justify-between relative group">
+                <div class="flex justify-between items-start">
+                    <p id="custom-card-title-display" class="text-xs sm:text-sm text-gray-700 font-bold flex items-center gap-1 truncate"><i class="fa-solid fa-bookmark text-cyan-600"></i> <span id="lbl-custom-title">কাস্টম খাত</span></p>
+                    <button onclick="editCustomCardTitle()" class="text-gray-400 hover:text-cyan-600 text-xs px-1" title="নাম পরিবর্তন করুন"><i class="fa-solid fa-pen"></i></button>
+                </div>
+                <h4 id="stat-custom-total" class="text-xl sm:text-2xl font-extrabold text-cyan-700 mt-1">৳ 0</h4>
+            </div>
+        </div>
+
+        <!-- Dedicated Bank Metric Cards Grid -->
+        <div class="bg-slate-800 p-4 rounded-2xl text-white shadow-lg space-y-3">
+            <h3 class="text-sm sm:text-base font-bold text-cyan-300 flex items-center gap-1">
+                <i class="fa-solid fa-building-columns"></i> ব্যাংক লেনদেন সামারি সমুহ
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="bg-slate-700/80 p-3.5 rounded-xl border-l-4 border-cyan-400 shadow-sm">
+                    <p class="text-xs sm:text-sm text-cyan-200 font-bold">১. ব্যাংক থেকে MFS জমা</p>
+                    <h4 id="stat-bank-to-mfs" class="text-lg sm:text-xl font-extrabold text-cyan-300 mt-1">৳ 0</h4>
+                </div>
+                <div class="bg-slate-700/80 p-3.5 rounded-xl border-l-4 border-indigo-400 shadow-sm">
+                    <p class="text-xs sm:text-sm text-indigo-200 font-bold">২. MFS থেকে ব্যাংকে জমা</p>
+                    <h4 id="stat-mfs-to-bank" class="text-lg sm:text-xl font-extrabold text-indigo-300 mt-1">৳ 0</h4>
+                </div>
+                <div class="bg-slate-700/80 p-3.5 rounded-xl border-l-4 border-emerald-400 shadow-sm">
+                    <p class="text-xs sm:text-sm text-emerald-200 font-bold">৩. ব্যাংক সাধারণ জমা (স্বতন্ত্র)</p>
+                    <h4 id="stat-bank-general-deposit" class="text-lg sm:text-xl font-extrabold text-emerald-300 mt-1">৳ 0</h4>
+                </div>
+                <div class="bg-slate-700/80 p-3.5 rounded-xl border-l-4 border-amber-400 shadow-sm">
+                    <p class="text-xs sm:text-sm text-amber-200 font-bold">৪. নির্দিষ্ট ব্যাংক ক্যাশ আনয়ন</p>
+                    <h4 id="stat-bank-cash-out" class="text-lg sm:text-xl font-extrabold text-amber-300 mt-1">৳ 0</h4>
+                </div>
+                <div class="bg-slate-700/80 p-3.5 rounded-xl border-l-4 border-teal-400 shadow-sm col-span-2 sm:col-span-2">
+                    <p class="text-xs sm:text-sm text-teal-200 font-bold"><i class="fa-solid fa-vault mr-1"></i> ৫. সর্বমোট ব্যাংক ইন (ক্যাশ ড্রয়ার + স্বতন্ত্র জমা)</p>
+                    <h4 id="stat-total-bank-cash-in" class="text-xl sm:text-2xl font-extrabold text-teal-300 mt-1">৳ 0</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entry Form Container -->
+        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5">
+            <div class="flex justify-between items-center mb-3 border-b pb-2">
+                <span class="text-sm sm:text-base font-bold text-gray-800"><i class="fa-solid fa-calendar-day text-blue-600 mr-1"></i> আজকের তারিখ: <span id="current-live-date" class="text-blue-700 font-extrabold"></span></span>
+                <button onclick="setTodayAllDates()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3.5 py-2 rounded-lg font-bold shadow transition flex items-center gap-1">
+                    <i class="fa-solid fa-rotate mr-1"></i> আজকের তারিখ বসান
+                </button>
+            </div>
+
+            <div class="flex border-b text-xs sm:text-sm font-bold overflow-x-auto gap-2 pb-2 mb-4">
+                <button class="tab-btn px-3 py-2 rounded-lg active" onclick="switchTab('mfs')"><i class="fa-solid fa-money-bill-transfer mr-1"></i> MFS লেনদেন</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('bank')"><i class="fa-solid fa-building-columns text-indigo-600 mr-1"></i> ব্যাংক লেনদেন</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('manual_comm')"><i class="fa-solid fa-coins text-amber-600 mr-1"></i> ম্যানুয়াল কমিশন</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('personal')"><i class="fa-solid fa-hand-holding-dollar mr-1"></i> ব্যক্তিগত আয় / বিনিয়োগ</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('bill')"><i class="fa-solid fa-bolt mr-1"></i> বিদ্যুৎ বিল</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('exp')"><i class="fa-solid fa-house-user mr-1"></i> খরচ</button>
+                <button class="tab-btn px-3 py-2 rounded-lg text-gray-600" onclick="switchTab('custom')"><i class="fa-solid fa-bookmark text-cyan-600 mr-1"></i> <span id="tab-custom-label">কাস্টম খাত</span></button>
+            </div>
+
+            <!-- Tab 1: MFS Form -->
+            <form id="form-mfs" onsubmit="handleFormSubmit(event, 'mfs')" class="space-y-3">
+                <input type="hidden" id="edit-id">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="mfs-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold shadow-sm focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">MFS সেবা</label>
+                        <select id="mfs-service" class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white font-bold text-gray-900">
+                            <option value="bkash">বিকাশ</option>
+                            <option value="nagad">নগদ</option>
+                            <option value="rocket">রকেট</option>
+                            <option value="upay">উপায়</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mode Selector -->
+                <div>
+                    <label class="block text-sm sm:text-base font-bold text-gray-800 mb-1">লেনদেনের ধরন সিলেক্ট করুন:</label>
+                    <select id="mfs-mode" onchange="toggleMfsModeFields()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-blue-50 font-extrabold text-blue-900 focus:ring-2 focus:ring-blue-500">
+                        <option value="cash_in">১. ক্যাশ ইন (গ্রাহক ক্যাশ দিল, MFS-এ জমা হলো)</option>
+                        <option value="cash_out">২. ক্যাশ আউট (গ্রাহক ক্যাশ নিল, MFS এ টাকা আসল)</option>
+                    </select>
+                </div>
+
+                <!-- Mode A: Cash In Section -->
+                <div id="section-cash-in" class="p-3.5 bg-emerald-50/80 rounded-xl border border-emerald-300 space-y-3">
+                    <span class="text-xs sm:text-sm font-extrabold text-emerald-900 flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-down-left"></i> ক্যাশ ইন তথ্য (গ্রাহক ক্যাশ দিল)
+                    </span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">MFS-এ জমা টাকা ৳ (মূল অঙ্ক)</label>
+                            <input type="number" id="in-cash-in" value="0" min="0" oninput="autoFillCashIn()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold focus:ring-2 focus:ring-emerald-500 bg-white text-gray-900" placeholder="যেমন: ৪০০০">
+                            <span class="text-[10px] sm:text-xs text-emerald-700 font-bold">MFS ব্যালেন্স কমবে (-)</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">গ্রাহক নগদ দিল (হাতে জমা) ৳</label>
+                            <input type="number" id="in-customer-cash" value="0" min="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-emerald-800 focus:ring-2 focus:ring-emerald-500 bg-white" placeholder="যেমন: ৪০৬০">
+                            <span class="text-[10px] sm:text-xs text-emerald-700 font-bold">হাতে ক্যাশ বাড়াবে (+) [অটো]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">কমিশন/লাভ টাকা ৳</label>
+                        <input type="number" id="in-commission" value="0" min="0" oninput="autoFillCashIn()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-teal-800 focus:ring-2 focus:ring-emerald-500 bg-white" placeholder="যেমন: ৬০">
+                        <span class="text-[10px] sm:text-xs text-teal-700 font-bold">লাভ ও মোট ক্যাশে অন্তর্ভুক্ত (+)</span>
+                    </div>
+                </div>
+
+                <!-- Mode B: Cash Out Section -->
+                <div id="section-cash-out" class="p-3.5 bg-amber-50/80 rounded-xl border border-amber-300 space-y-3 hidden">
+                    <span class="text-xs sm:text-sm font-extrabold text-amber-900 flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-up-right"></i> ক্যাশ আউট তথ্য (গ্রাহক ক্যাশ নিল)
+                    </span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">MFS এ আসল (টাকা উত্তোলিত) ৳</label>
+                            <input type="number" id="out-amount" value="0" min="0" oninput="autoFillCashOut()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold focus:ring-2 focus:ring-amber-500 bg-white text-gray-900" placeholder="যেমন: ৪০০০">
+                            <span class="text-[10px] sm:text-xs text-amber-700 font-bold">MFS ব্যালেন্স বাড়াবে (+)</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">ড্রয়ার থেকে ক্যাশ দেওয়া হলো (-) ৳</label>
+                            <input type="number" id="out-drawer-cash" value="0" min="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-red-800 focus:ring-2 focus:ring-amber-500 bg-white" placeholder="যেমন: ৪০০০">
+                            <span class="text-[10px] sm:text-xs text-red-700 font-bold">হাতে নগদ ক্যাশ কমাবে (-)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">ক্যাশ আউট কমিশন/লাভ ৳</label>
+                        <input type="number" id="out-commission" value="0" min="0" oninput="autoFillCashOut()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-teal-800 focus:ring-2 focus:ring-amber-500 bg-white" placeholder="যেমন: ৬০">
+                        <span class="text-[10px] sm:text-xs text-teal-700 font-bold">লাভ ও ক্যাশে যোগ হবে (+)</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">নোট / বিবরণ</label>
+                    <input type="text" id="mfs-note" placeholder="নম্বর বা বিবরণ" class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white font-bold text-gray-900">
+                </div>
+
+                <button type="submit" id="btn-submit-mfs" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-base transition shadow">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> লেনদেন সেভ করুন
+                </button>
+            </form>
+
+            <!-- Tab 2: Bank Form -->
+            <form id="form-bank" onsubmit="handleFormSubmit(event, 'bank')" class="space-y-3 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="bank-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">ব্যাংকের নাম লিখুন <span class="text-red-500">*</span></label>
+                        <input type="text" id="bank-name" required placeholder="যেমন: ডাচ বাংলা / ইস্টার্ন ব্যাংক" class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 font-bold bg-white text-gray-900">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">ব্যাংক লেনদেনের ধরন</label>
+                        <select id="bank-action-type" onchange="toggleBankMfsField()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 font-extrabold text-gray-900 bg-white">
+                            <option value="bank_to_mfs">১. ব্যাংক থেকে MFS-এ জমা (+ MFS)</option>
+                            <option value="mfs_to_bank">২. MFS থেকে ব্যাংকে জমা (- MFS)</option>
+                            <option value="general_deposit">৩. ব্যাংক সাধারণ জমা (স্বতন্ত্র)</option>
+                            <option value="bank_cash_out">৪. ব্যাংক থেকে মোট ক্যাশ আনা (+ ক্যাশ ড্রয়ার)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">টাকার পরিমাণ ৳ <span class="text-red-500">*</span></label>
+                        <input type="number" id="bank-amount" min="1" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 font-extrabold bg-white text-gray-900" placeholder="যেমন: ২০০০০">
+                    </div>
+                </div>
+
+                <div id="bank-mfs-select-container">
+                    <label class="block text-sm font-bold text-gray-800 mb-1">সংযুক্ত MFS অ্যাকাউন্ট সিলেক্ট করুন</label>
+                    <select id="bank-target-mfs" class="w-full text-sm sm:text-base p-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white font-bold text-gray-900">
+                        <option value="bkash">বিকাশ</option>
+                        <option value="nagad">নগদ</option>
+                        <option value="rocket">রকেট</option>
+                        <option value="upay">উপায়</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">চেক নং / অতিরিক্ত নোট</label>
+                    <input type="text" id="bank-note" placeholder="যেমন: চেক নং- ১২৩৪৫৬" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-building-columns mr-1"></i> ব্যাংক লেনদেন তথ্য সেভ করুন
+                </button>
+            </form>
+
+            <!-- Tab 3: Manual Commission Entry Form -->
+            <form id="form-manual_comm" onsubmit="handleFormSubmit(event, 'manual_comm')" class="space-y-3 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="manual_comm-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">হাতে প্রাপ্ত কমিশন ৳</label>
+                        <input type="number" id="manual_comm-amount" min="1" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900" placeholder="যেমন: ৫০">
+                        <span class="text-xs text-amber-700 font-bold">সরাসরি হাতে নগদ ক্যাশে (+) যোগ হবে</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">বিবরণ / নোট</label>
+                    <input type="text" id="manual_comm-note" placeholder="যেমন: বকশিস / কমিশন" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                </div>
+                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-coins mr-1"></i> হাতে পাওয়া কমিশন যোগ করুন
+                </button>
+            </form>
+
+            <!-- Tab 4: Personal Form (UPDATED in v53: Single Frame with Investment & Dividend fields side-by-side) -->
+            <form id="form-personal" onsubmit="handleFormSubmit(event, 'personal')" class="space-y-3 hidden">
+                <div class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs sm:text-sm font-bold text-teal-800">
+                    <i class="fa-solid fa-circle-info mr-1"></i> নোট: ব্যক্তিগত বিনিয়োগ বা আয় দোকানের ক্যাশ ড্রয়ার বা মূল ব্যালেন্সের সাথে যোগ হবে না (একান্তই আলাদা থাকবে)।
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="personal-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">লেনদেনের ধরন</label>
+                        <select id="personal-type" onchange="togglePersonalFields()" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                            <option value="invest">১. ব্যক্তিগত বিনিয়োগ ও লভ্যাংশ</option>
+                            <option value="income">২. সাধারণ ব্যক্তিগত আয়</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">ব্যক্তির নাম <span class="text-red-500">*</span></label>
+                    <input type="text" id="personal-person" required placeholder="যেমন: নাম" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900">
+                </div>
+
+                <!-- Combined Investment and Dividend in the SAME FRAME -->
+                <div id="personal-invest-frame" class="p-3.5 bg-emerald-50/80 rounded-xl border border-emerald-300 space-y-3">
+                    <span class="text-xs sm:text-sm font-extrabold text-emerald-900 flex items-center gap-1">
+                        <i class="fa-solid fa-chart-line"></i> একই ফ্রেমে বিনিয়োগ ও লভ্যাংশ তথ্য
+                    </span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">মূল বিনিয়োগের টাকা ৳</label>
+                            <input type="number" id="personal-invest-amount" value="0" min="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-purple-900 focus:ring-2 focus:ring-emerald-500 bg-white" placeholder="যেমন: ৫০০০০">
+                            <span class="text-[10px] sm:text-xs text-purple-700 font-bold">বিনিয়োগ কার্ডে হিসাব হবে</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">বিনিয়োগের লাভ / ডিভিডেন্ড ৳</label>
+                            <input type="number" id="personal-dividend-amount" value="0" min="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg font-extrabold text-emerald-900 focus:ring-2 focus:ring-emerald-500 bg-white" placeholder="যেমন: ৫০০০">
+                            <span class="text-[10px] sm:text-xs text-emerald-700 font-bold">বিনিয়োগের লাভ কার্ডে হিসাব হবে</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Income Amount (Visible only if General Income chosen) -->
+                <div id="personal-income-frame" class="hidden">
+                    <label class="block text-sm font-bold text-gray-800 mb-1">আয়ের পরিমাণ ৳ <span class="text-red-500">*</span></label>
+                    <input type="number" id="personal-amount" min="0" value="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900" placeholder="যেমন: ৫০০০০">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">অতিরিক্ত বিবরণ / নোট</label>
+                    <input type="text" id="personal-note" placeholder="যেমন: যৌথ ব্যবসা বা মাসিক লভ্যাংশ" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                </div>
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> ব্যক্তিগত লেজার সেভ করুন (একই ফ্রেমে)
+                </button>
+            </form>
+
+            <!-- Tab 5: Electricity Bill Form -->
+            <form id="form-bill" onsubmit="handleFormSubmit(event, 'bill')" class="space-y-3 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="bill-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">যে MFS থেকে বিল দিয়েছেন</label>
+                        <select id="bill-mfs" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                            <option value="bkash">বিকাশ</option>
+                            <option value="nagad">নগদ</option>
+                            <option value="rocket">রকেট</option>
+                            <option value="upay">উপায়</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">মিটার নং</label>
+                        <input type="text" id="bill-meter" placeholder="মিটার নং" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">গ্রাহকের দেওয়া বিল ৳</label>
+                        <input type="number" id="bill-amount" min="1" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900" placeholder="যেমন: ৩০০">
+                        <span class="text-[10px] text-emerald-700 font-bold">ড্রয়ারে ক্যাশ জমা (+)</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">অতিরিক্ত কমিশন ৳</label>
+                        <input type="number" id="bill-commission" value="0" min="0" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-teal-800">
+                        <span class="text-[10px] text-emerald-700 font-bold">ড্রয়ারে ক্যাশ জমা (+)</span>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> বিদ্যুৎ বিল সেভ করুন
+                </button>
+            </form>
+
+            <!-- Tab 6: Expenses Form -->
+            <form id="form-exp" onsubmit="handleFormSubmit(event, 'exp')" class="space-y-3 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="exp-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">ক্যাটাগরি</label>
+                        <select id="exp-category" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                            <option value="family">সংসার খরচ (ব্যক্তিগত)</option>
+                            <option value="shop">দোকান খরচ (ব্যবসা)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">টাকার পরিমাণ ৳</label>
+                    <input type="number" id="exp-amount" min="1" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900" placeholder="যেমন: ৫০০">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">বিবরণ</label>
+                    <input type="text" id="exp-note" placeholder="যেমন: বাজার / নাস্তা" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                </div>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> খরচ সেভ করুন
+                </button>
+            </form>
+
+            <!-- Tab 7: Custom Sector Form (8th Card) -->
+            <form id="form-custom" onsubmit="handleFormSubmit(event, 'custom')" class="space-y-3 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">তারিখ <span class="text-red-500">*</span></label>
+                        <input type="date" id="custom-date" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white text-gray-900 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800 mb-1">লেনদেনের প্রকৃতি</label>
+                        <select id="custom-nature" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                            <option value="income">আয় / জমা (+)</option>
+                            <option value="expense">ব্যয় / খরচ (-)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">টাকার পরিমাণ ৳ <span class="text-red-500">*</span></label>
+                    <input type="number" id="custom-amount" min="1" required class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-extrabold text-gray-900" placeholder="যেমন: ৫০০">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-800 mb-1">বিবরণ / নোট</label>
+                    <input type="text" id="custom-note" placeholder="যেমন: নতুন খাতের বিবরণ" class="w-full text-sm sm:text-base p-2.5 border rounded-lg bg-white font-bold text-gray-900">
+                </div>
+                <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded-lg text-base transition">
+                    <i class="fa-solid fa-bookmark mr-1"></i> কাস্টম খাতের তথ্য সেভ করুন
+                </button>
+            </form>
+        </div>
+
+        <!-- Transactions History Table with Filter Bar -->
+        <div class="bg-white rounded-xl shadow-md p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
+                <h3 class="text-base font-bold text-gray-900"><i class="fa-solid fa-clock-history mr-1 text-teal-600"></i> সাম্প্রতিক লেনদেন ইতিহাস</h3>
+                <span id="entry-count" class="text-xs sm:text-sm bg-teal-100 text-teal-800 px-3 py-1 rounded-full font-bold">০ টি এন্ট্রি</span>
+            </div>
+
+            <!-- Table Filter Bar -->
+            <div class="flex flex-wrap gap-1.5 mb-4 text-xs sm:text-sm font-bold border-b pb-3">
+                <button class="filter-btn active px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('all', this)">সব দেখুন</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('mfs', this)">MFS লেনদেন</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('bank', this)">ব্যাংক</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('manual_comm', this)">ম্যানুয়াল কমিশন</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('personal', this)">ব্যক্তিগত লেজার</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('bill', this)">বিদ্যুৎ বিল</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('exp', this)">খরচ</button>
+                <button class="filter-btn px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-teal-600 hover:text-white transition" onclick="setTableFilter('custom', this)">কাস্টম খাত</button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm sm:text-base font-semibold">
+                    <thead class="bg-gray-100 text-gray-800 border-b">
+                        <tr>
+                            <th class="p-2.5">তারিখ</th>
+                            <th class="p-2.5">বিবরণ</th>
+                            <th class="p-2.5">পরিমাণ</th>
+                            <th class="p-2.5">কমিশন/লাভ</th>
+                            <th class="p-2.5">নোট</th>
+                            <th class="p-2.5 text-right">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table-body" class="divide-y text-gray-900"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let appState = {
+            mfsBalances: { bkash: 0, nagad: 0, rocket: 0, upay: 0 },
+            cashOnHand: 0,
+            customCardTitle: "কাস্টম খাত",
+            transactions: []
+        };
+
+        let currentTableFilter = 'all';
+
+        function getTodayLocalDate() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function setTodayAllDates() {
+            const today = getTodayLocalDate();
+            ['mfs-date', 'manual_comm-date', 'personal-date', 'bank-date', 'bill-date', 'exp-date', 'custom-date'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = today;
+                }
+            });
+            const liveDateEl = document.getElementById('current-live-date');
+            if (liveDateEl) liveDateEl.innerText = today;
+        }
+
+        function injectDefaultDatesInHTML() {
+            const today = getTodayLocalDate();
+            ['mfs-date', 'manual_comm-date', 'personal-date', 'bank-date', 'bill-date', 'exp-date', 'custom-date'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.value) {
+                    el.setAttribute('value', today);
+                    el.value = today;
+                }
+            });
+            const liveDateEl = document.getElementById('current-live-date');
+            if (liveDateEl) liveDateEl.innerText = today;
+        }
+
+        function togglePersonalFields() {
+            const type = document.getElementById('personal-type').value;
+            const investFrame = document.getElementById('personal-invest-frame');
+            const incomeFrame = document.getElementById('personal-income-frame');
+
+            if (type === 'invest') {
+                investFrame.classList.remove('hidden');
+                incomeFrame.classList.add('hidden');
+            } else {
+                investFrame.classList.add('hidden');
+                incomeFrame.classList.remove('hidden');
+            }
+        }
+
+        function editCustomCardTitle() {
+            const newTitle = prompt("কাস্টম খাতের কার্ডের নতুন নাম লিখুন:", appState.customCardTitle || "কাস্টম খাত");
+            if (newTitle !== null && newTitle.trim() !== "") {
+                appState.customCardTitle = newTitle.trim();
+                saveLocalStorage();
+                updateCustomCardUI();
+            }
+        }
+
+        function updateCustomCardUI() {
+            const title = appState.customCardTitle || "কাস্টম খাত";
+            document.getElementById('lbl-custom-title').innerText = title;
+            document.getElementById('tab-custom-label').innerText = title;
+        }
+
+        function toggleBankMfsField() {
+            const action = document.getElementById('bank-action-type').value;
+            const container = document.getElementById('bank-mfs-select-container');
+            if (action === 'bank_to_mfs' || action === 'mfs_to_bank') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function toggleMfsModeFields() {
+            const mode = document.getElementById('mfs-mode').value;
+            const sectionIn = document.getElementById('section-cash-in');
+            const sectionOut = document.getElementById('section-cash-out');
+
+            if (mode === 'cash_in') {
+                sectionIn.classList.remove('hidden');
+                sectionOut.classList.add('hidden');
+            } else {
+                sectionIn.classList.add('hidden');
+                sectionOut.classList.remove('hidden');
+            }
+        }
+
+        function autoFillCashIn() {
+            const cashIn = Number(document.getElementById('in-cash-in').value) || 0;
+            const commission = Number(document.getElementById('in-commission').value) || 0;
+            if (cashIn > 0) {
+                document.getElementById('in-customer-cash').value = cashIn + commission;
+            }
+        }
+
+        function autoFillCashOut() {
+            const outAmount = Number(document.getElementById('out-amount').value) || 0;
+            const commission = Number(document.getElementById('out-commission').value) || 0;
+            if (outAmount > 0) {
+                document.getElementById('out-drawer-cash').value = outAmount;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLocalStorage();
+            injectDefaultDatesInHTML();
+            setTodayAllDates();
+            toggleBankMfsField();
+            toggleMfsModeFields();
+            togglePersonalFields();
+            updateCustomCardUI();
+            updateUI();
+        });
+
+        function loadLocalStorage() {
+            let stored = localStorage.getItem('desh_telecom_data_v53');
+            if (!stored) stored = localStorage.getItem('desh_telecom_data_v52');
+            if (!stored) stored = localStorage.getItem('desh_telecom_data_v51');
+            if (!stored) stored = localStorage.getItem('desh_telecom_data_v50');
+            if (!stored) stored = localStorage.getItem('desh_telecom_data_v49');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                appState = { ...appState, ...parsed };
+                if (!appState.customCardTitle) appState.customCardTitle = "কাস্টম খাত";
+            }
+        }
+
+        function saveLocalStorage() {
+            localStorage.setItem('desh_telecom_data_v53', JSON.stringify(appState));
+            updateUI();
+        }
+
+        function updateUI() {
+            const mfsTotal = Object.values(appState.mfsBalances).reduce((a, b) => a + Number(b), 0);
+            const totalNet = appState.cashOnHand + mfsTotal;
+
+            document.getElementById('total-net-balance').innerText = `৳ ${totalNet.toLocaleString('bn-BD')}`;
+            document.getElementById('top-cash-on-hand').innerText = `৳ ${appState.cashOnHand.toLocaleString('bn-BD')}`;
+            document.getElementById('top-mfs-total').innerText = `৳ ${mfsTotal.toLocaleString('bn-BD')}`;
+
+            document.getElementById('bal-bkash').innerText = `৳ ${Number(appState.mfsBalances.bkash).toLocaleString('bn-BD')}`;
+            document.getElementById('bal-nagad').innerText = `৳ ${Number(appState.mfsBalances.nagad).toLocaleString('bn-BD')}`;
+            document.getElementById('bal-rocket').innerText = `৳ ${Number(appState.mfsBalances.rocket).toLocaleString('bn-BD')}`;
+            document.getElementById('bal-upay').innerText = `৳ ${Number(appState.mfsBalances.upay).toLocaleString('bn-BD')}`;
+
+            let totalProfit = 0, todayProfit = 0, familyExp = 0, shopExp = 0;
+            let personalIncomeTotal = 0, personalInvestTotal = 0, personalDividendTotal = 0, manualCommissionTotal = 0;
+            let customTotal = 0;
+            
+            let bankToMfsTotal = 0;
+            let mfsToBankTotal = 0;
+            let bankGeneralDepositTotal = 0;
+            let bankCashOutTotal = 0;
+
+            const todayStr = getTodayLocalDate();
+
+            appState.transactions.forEach(t => {
+                if (t.type === 'manual_comm') {
+                    manualCommissionTotal += Number(t.amount);
+                    totalProfit += Number(t.amount);
+                    if (t.date === todayStr) todayProfit += Number(t.amount);
+                } else if (t.type === 'bill') {
+                    const comm = Number(t.commission) || 0;
+                    totalProfit += comm;
+                    if (t.date === todayStr) todayProfit += comm;
+                } else if (t.type === 'mfs') {
+                    const comm = Number(t.commission) || 0;
+                    totalProfit += comm;
+                    if (t.date === todayStr) todayProfit += comm;
+                } else if (t.type === 'custom') {
+                    customTotal += Number(t.amount);
+                }
+
+                if (t.type === 'bank') {
+                    const amt = Number(t.amount) || 0;
+                    const actionType = t.bankActionType || t.bankType;
+                    
+                    if (actionType === 'bank_to_mfs') bankToMfsTotal += amt;
+                    else if (actionType === 'mfs_to_bank') mfsToBankTotal += amt;
+                    else if (actionType === 'general_deposit' || actionType === 'cash_to_bank') bankGeneralDepositTotal += amt;
+                    else if (actionType === 'bank_cash_out' || actionType === 'bank_to_cash') bankCashOutTotal += amt;
+                }
+                if (t.type === 'personal') {
+                    if (t.personalType === 'income') personalIncomeTotal += Number(t.amount || 0);
+                    if (t.personalType === 'dividend') personalDividendTotal += Number(t.amount || 0);
+                    if (t.personalType === 'invest') {
+                        personalInvestTotal += Number(t.investAmount || t.amount || 0);
+                        personalDividendTotal += Number(t.dividendAmount || 0);
+                    }
+                }
+                if (t.type === 'exp') {
+                    if (t.category === 'family') familyExp += Number(t.amount);
+                    if (t.category === 'shop') shopExp += Number(t.amount);
+                }
+            });
+
+            const combinedTotalBankIn = bankGeneralDepositTotal + bankCashOutTotal;
+
+            document.getElementById('stat-today-profit').innerText = `৳ ${todayProfit.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-total-profit').innerText = `৳ ${totalProfit.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-manual-commission').innerText = `৳ ${manualCommissionTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-custom-total').innerText = `৳ ${customTotal.toLocaleString('bn-BD')}`;
+            
+            document.getElementById('stat-bank-to-mfs').innerText = `৳ ${bankToMfsTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-mfs-to-bank').innerText = `৳ ${mfsToBankTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-bank-general-deposit').innerText = `৳ ${bankGeneralDepositTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-bank-cash-out').innerText = `৳ ${bankCashOutTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-total-bank-cash-in').innerText = `৳ ${combinedTotalBankIn.toLocaleString('bn-BD')}`;
+
+            document.getElementById('stat-personal-income').innerText = `৳ ${personalIncomeTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-personal-dividend').innerText = `৳ ${personalDividendTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-personal-invest').innerText = `৳ ${personalInvestTotal.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-family-exp').innerText = `৳ ${familyExp.toLocaleString('bn-BD')}`;
+            document.getElementById('stat-shop-exp').innerText = `৳ ${shopExp.toLocaleString('bn-BD')}`;
+
+            renderTable();
+            updateCustomCardUI();
+        }
+
+        function setTableFilter(filterType, btnElement) {
+            currentTableFilter = filterType;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('transaction-table-body');
+            tbody.innerHTML = '';
+
+            let filteredTransactions = appState.transactions;
+            if (currentTableFilter !== 'all') {
+                filteredTransactions = appState.transactions.filter(t => t.type === currentTableFilter);
+            }
+
+            document.getElementById('entry-count').innerText = `${filteredTransactions.length} টি এন্ট্রি (মোট: ${appState.transactions.length})`;
+
+            if (filteredTransactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4 text-gray-400 font-bold">এই খাতে কোনো তথ্য নেই।</td></tr>`;
+                return;
+            }
+
+            filteredTransactions.slice().reverse().forEach((t) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+
+                let detailsHtml = '';
+                let commVal = t.commission || t.dividendAmount || 0;
+                let displayAmt = t.investAmount || t.outAmount || t.cashIn || t.amount || 0;
+
+                if (t.type === 'mfs') {
+                    if (t.mode === 'cash_out') {
+                        detailsHtml = `<span class="font-bold text-amber-700">${(t.service || '').toUpperCase()} (ক্যাশ আউট)</span> (MFS জমা: ৳${t.outAmount}, ক্যাশ প্রদান: ৳${t.outDrawerCash})`;
+                    } else {
+                        detailsHtml = `<span class="font-bold text-emerald-700">${(t.service || '').toUpperCase()} (ক্যাশ ইন)</span> (MFS জমা: ৳${t.cashIn}, গ্রাহক ক্যাশ: ৳${t.customerCash})`;
+                    }
+                } else if (t.type === 'manual_comm') {
+                    detailsHtml = `<span class="font-bold text-amber-600"><i class="fa-solid fa-coins mr-1"></i>ম্যানুয়াল কমিশন</span>`;
+                    commVal = t.amount;
+                } else if (t.type === 'personal') {
+                    const person = t.person ? ` (${t.person})` : '';
+                    if (t.personalType === 'invest') {
+                        detailsHtml = `<span class="font-bold text-purple-700">বিনিয়োগ ও লভ্যাংশ${person} [আলাদা লেজার]</span> (মূল: ৳${t.investAmount || 0}, লাভ: ৳${t.dividendAmount || 0})`;
+                    } else if (t.personalType === 'income') {
+                        detailsHtml = `<span class="font-bold text-teal-700">ব্যক্তিগত আয়${person} [আলাদা লেজার]</span>`;
+                    } else {
+                        detailsHtml = `<span class="font-bold text-teal-700">ব্যক্তিগত বিনিয়োগের লাভ${person} [আলাদা লেজার]</span>`;
+                    }
+                } else if (t.type === 'bank') {
+                    let bLabel = '';
+                    const actionType = t.bankActionType || t.bankType;
+                    const mfsName = (t.targetMfs || t.bankMfs || '').toUpperCase();
+
+                    if (actionType === 'bank_to_mfs') bLabel = `ব্যাংক ➔ MFS (${mfsName})`;
+                    else if (actionType === 'mfs_to_bank') bLabel = `MFS (${mfsName}) ➔ ব্যাংক`;
+                    else if (actionType === 'general_deposit' || actionType === 'cash_to_bank') bLabel = `ব্যাংক সাধারণ জমা (স্বতন্ত্র)`;
+                    else if (actionType === 'bank_cash_out' || actionType === 'bank_to_cash') bLabel = `ব্যাংক হতে ক্যাশ আনা`;
+
+                    detailsHtml = `<span class="font-bold text-indigo-700"><i class="fa-solid fa-building-columns mr-1"></i>${t.bankName || 'ব্যাংক'}</span> - ${bLabel}`;
+                } else if (t.type === 'bill') {
+                    const mfsName = (t.billMfs || '').toUpperCase();
+                    const meter = t.meter ? ` (মিটার: ${t.meter})` : '';
+                    detailsHtml = `<span class="font-bold text-amber-700"><i class="fa-solid fa-bolt mr-1"></i>বিদ্যুৎ বিল (${mfsName})</span>${meter}`;
+                    displayAmt = t.amount;
+                    commVal = t.commission || 0;
+                } else if (t.type === 'exp') {
+                    detailsHtml = `${t.category === 'family' ? 'সংসার' : 'দোকান'} খরচ`;
+                } else if (t.type === 'custom') {
+                    const cTitle = appState.customCardTitle || 'কাস্টম খাত';
+                    const nat = t.nature === 'income' ? 'আয়/জমা' : 'ব্যয়/খরচ';
+                    detailsHtml = `<span class="font-bold text-cyan-700"><i class="fa-solid fa-bookmark mr-1"></i>${cTitle} (${nat})</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="p-3 whitespace-nowrap font-bold">${t.date}</td>
+                    <td class="p-3 font-bold">${detailsHtml}</td>
+                    <td class="p-3 font-extrabold text-blue-900">৳${displayAmt}</td>
+                    <td class="p-3 text-emerald-700 font-extrabold">৳${commVal}</td>
+                    <td class="p-3 text-gray-700 font-bold">${t.note || '-'}</td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="editTransaction('${t.id}')" class="text-blue-600 hover:text-blue-800 p-1.5 text-base font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteTransaction('${t.id}')" class="text-red-600 hover:text-red-800 p-1.5 text-base font-bold"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+            document.getElementById('form-mfs').classList.add('hidden');
+            document.getElementById('form-manual_comm').classList.add('hidden');
+            document.getElementById('form-personal').classList.add('hidden');
+            document.getElementById('form-bank').classList.add('hidden');
+            document.getElementById('form-bill').classList.add('hidden');
+            document.getElementById('form-exp').classList.add('hidden');
+            document.getElementById('form-custom').classList.add('hidden');
+
+            document.getElementById(`form-${tab}`).classList.remove('hidden');
+
+            const activeDateInput = document.getElementById(`${tab}-date`);
+            if (activeDateInput && !activeDateInput.value) {
+                activeDateInput.value = getTodayLocalDate();
+            }
+
+            const filterMap = {
+                'mfs': 'mfs',
+                'bank': 'bank',
+                'manual_comm': 'manual_comm',
+                'personal': 'personal',
+                'bill': 'bill',
+                'exp': 'exp',
+                'custom': 'custom'
+            };
+            if (filterMap[tab]) {
+                const filterBtn = document.querySelector(`.filter-btn[onclick*="${filterMap[tab]}"]`);
+                if (filterBtn) {
+                    setTableFilter(filterMap[tab], filterBtn);
+                }
+            }
+        }
+
+        function handleFormSubmit(e, type) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-id').value;
+
+            if (editId) deleteTransaction(editId, false);
+
+            const txDate = document.getElementById(`${type}-date`).value || getTodayLocalDate();
+            let newTx = { id: editId || Date.now().toString(), type: type, date: txDate };
+
+            if (type === 'mfs') {
+                const service = document.getElementById('mfs-service').value;
+                const mode = document.getElementById('mfs-mode').value;
+                const note = document.getElementById('mfs-note').value;
+
+                newTx.service = service;
+                newTx.mode = mode;
+                newTx.note = note;
+
+                if (mode === 'cash_in') {
+                    const cashIn = Number(document.getElementById('in-cash-in').value) || 0;
+                    const customerCash = Number(document.getElementById('in-customer-cash').value) || 0;
+                    const commission = Number(document.getElementById('in-commission').value) || 0;
+
+                    newTx.cashIn = cashIn;
+                    newTx.customerCash = customerCash;
+                    newTx.commission = commission;
+
+                    appState.mfsBalances[service] = (appState.mfsBalances[service] || 0) - cashIn;
+                    appState.cashOnHand += customerCash;
+
+                } else {
+                    const outAmount = Number(document.getElementById('out-amount').value) || 0;
+                    const outDrawerCash = Number(document.getElementById('out-drawer-cash').value) || 0;
+                    const commission = Number(document.getElementById('out-commission').value) || 0;
+
+                    newTx.outAmount = outAmount;
+                    newTx.outDrawerCash = outDrawerCash;
+                    newTx.commission = commission;
+
+                    appState.mfsBalances[service] = (appState.mfsBalances[service] || 0) + outAmount;
+                    appState.cashOnHand -= outDrawerCash;
+                    if (commission > 0) appState.cashOnHand += commission;
+                }
+
+            } else if (type === 'manual_comm') {
+                const amount = Number(document.getElementById('manual_comm-amount').value) || 0;
+                const note = document.getElementById('manual_comm-note').value;
+
+                newTx = { ...newTx, amount, note };
+                appState.cashOnHand += amount;
+
+            } else if (type === 'bank') {
+                const bankName = document.getElementById('bank-name').value;
+                const bankActionType = document.getElementById('bank-action-type').value;
+                const amount = Number(document.getElementById('bank-amount').value) || 0;
+                const targetMfs = document.getElementById('bank-target-mfs').value;
+                const note = document.getElementById('bank-note').value;
+
+                newTx = { ...newTx, bankName, bankActionType, amount, targetMfs, note };
+
+                if (bankActionType === 'bank_to_mfs') {
+                    appState.mfsBalances[targetMfs] = (appState.mfsBalances[targetMfs] || 0) + amount;
+                } else if (bankActionType === 'mfs_to_bank') {
+                    appState.mfsBalances[targetMfs] = (appState.mfsBalances[targetMfs] || 0) - amount;
+                } else if (bankActionType === 'bank_cash_out') {
+                    appState.cashOnHand += amount;
+                }
+
+            } else if (type === 'personal') {
+                const personalType = document.getElementById('personal-type').value;
+                const person = document.getElementById('personal-person').value;
+                const note = document.getElementById('personal-note').value;
+
+                if (personalType === 'invest') {
+                    const investAmount = Number(document.getElementById('personal-invest-amount').value) || 0;
+                    const dividendAmount = Number(document.getElementById('personal-dividend-amount').value) || 0;
+                    newTx = { ...newTx, personalType, person, investAmount, dividendAmount, note };
+                } else {
+                    const amount = Number(document.getElementById('personal-amount').value) || 0;
+                    newTx = { ...newTx, personalType, person, amount, note };
+                }
+
+            } else if (type === 'bill') {
+                const billMfs = document.getElementById('bill-mfs').value;
+                const meter = document.getElementById('bill-meter').value;
+                const amount = Number(document.getElementById('bill-amount').value) || 0;
+                const commission = Number(document.getElementById('bill-commission').value) || 0;
+
+                newTx = { ...newTx, billMfs, meter, amount, commission };
+
+                appState.mfsBalances[billMfs] = (appState.mfsBalances[billMfs] || 0) - amount;
+
+                if (amount > 0) {
+                    appState.cashOnHand += amount;
+                }
+                if (commission > 0) {
+                    appState.cashOnHand += commission;
+                }
+
+            } else if (type === 'exp') {
+                const category = document.getElementById('exp-category').value;
+                const amount = Number(document.getElementById('exp-amount').value) || 0;
+                const note = document.getElementById('exp-note') ? document.getElementById('exp-note').value : '';
+
+                newTx = { ...newTx, category, amount, note };
+
+            } else if (type === 'custom') {
+                const nature = document.getElementById('custom-nature').value;
+                const amount = Number(document.getElementById('custom-amount').value) || 0;
+                const note = document.getElementById('custom-note').value;
+
+                newTx = { ...newTx, nature, amount, note };
+                if (nature === 'income') {
+                    appState.cashOnHand += amount;
+                } else {
+                    appState.cashOnHand -= amount;
+                }
+            }
+
+            appState.transactions.push(newTx);
+            document.getElementById('edit-id').value = '';
+            e.target.reset();
+            injectDefaultDatesInHTML();
+            setTodayAllDates();
+            toggleBankMfsField();
+            toggleMfsModeFields();
+            togglePersonalFields();
+
+            saveLocalStorage();
+        }
+
+        function deleteTransaction(id, update = true) {
+            const index = appState.transactions.findIndex(t => t.id === id);
+            if (index !== -1) {
+                const t = appState.transactions[index];
+
+                if (t.type === 'mfs') {
+                    if (t.mode === 'cash_out') {
+                        appState.mfsBalances[t.service] -= (t.outAmount || 0);
+                        appState.cashOnHand += (t.outDrawerCash || 0);
+                        const comm = Number(t.commission) || 0;
+                        if (comm > 0) appState.cashOnHand -= comm;
+                    } else {
+                        appState.mfsBalances[t.service] += (t.cashIn || 0);
+                        appState.cashOnHand -= (t.customerCash || 0);
+                    }
+                } else if (t.type === 'manual_comm') {
+                    appState.cashOnHand -= t.amount;
+                } else if (t.type === 'bank') {
+                    const actionType = t.bankActionType || t.bankType;
+                    const mfsName = t.targetMfs || t.bankMfs;
+
+                    if (actionType === 'bank_to_mfs') {
+                        appState.mfsBalances[mfsName] -= t.amount;
+                    } else if (actionType === 'mfs_to_bank') {
+                        appState.mfsBalances[mfsName] += t.amount;
+                    } else if (actionType === 'bank_cash_out' || actionType === 'bank_to_cash') {
+                        appState.cashOnHand -= t.amount;
+                    }
+                } else if (t.type === 'personal') {
+                    // Personal transactions do not affect shop balance
+                } else if (t.type === 'bill') {
+                    appState.mfsBalances[t.billMfs] = (appState.mfsBalances[t.billMfs] || 0) + Number(t.amount);
+                    if (t.amount > 0) {
+                        appState.cashOnHand -= Number(t.amount);
+                    }
+                    if (t.commission > 0) {
+                        appState.cashOnHand -= Number(t.commission);
+                    }
+                } else if (t.type === 'custom') {
+                    if (t.nature === 'income') {
+                        appState.cashOnHand -= t.amount;
+                    } else {
+                        appState.cashOnHand += t.amount;
+                    }
+                }
+
+                appState.transactions.splice(index, 1);
+                if (update) saveLocalStorage();
+            }
+        }
+
+        function editTransaction(id) {
+            const t = appState.transactions.find(x => x.id === id);
+            if (!t) return;
+
+            document.getElementById('edit-id').value = t.id;
+            switchTab(t.type);
+
+            if (t.type === 'bank') {
+                document.getElementById('bank-date').value = t.date || getTodayLocalDate();
+                document.getElementById('bank-name').value = t.bankName || '';
+                document.getElementById('bank-action-type').value = t.bankActionType || t.bankType || 'bank_to_mfs';
+                document.getElementById('bank-amount').value = t.amount || 0;
+                document.getElementById('bank-target-mfs').value = t.targetMfs || t.bankMfs || 'bkash';
+                document.getElementById('bank-note').value = t.note || '';
+                toggleBankMfsField();
+            } else if (t.type === 'mfs') {
+                document.getElementById('mfs-date').value = t.date || getTodayLocalDate();
+                document.getElementById('mfs-service').value = t.service || 'bkash';
+                document.getElementById('mfs-mode').value = t.mode || 'cash_in';
+                toggleMfsModeFields();
+
+                if (t.mode === 'cash_out') {
+                    document.getElementById('out-amount').value = t.outAmount || 0;
+                    document.getElementById('out-drawer-cash').value = t.outDrawerCash || 0;
+                    document.getElementById('out-commission').value = t.commission || 0;
+                } else {
+                    document.getElementById('in-cash-in').value = t.cashIn || 0;
+                    document.getElementById('in-customer-cash').value = t.customerCash || 0;
+                    document.getElementById('in-commission').value = t.commission || 0;
+                }
+                document.getElementById('mfs-note').value = t.note || '';
+            } else if (t.type === 'bill') {
+                document.getElementById('bill-date').value = t.date || getTodayLocalDate();
+                document.getElementById('bill-mfs').value = t.billMfs || 'bkash';
+                document.getElementById('bill-meter').value = t.meter || '';
+                document.getElementById('bill-amount').value = t.amount || 0;
+                document.getElementById('bill-commission').value = t.commission || 0;
+            } else if (t.type === 'personal') {
+                document.getElementById('personal-date').value = t.date || getTodayLocalDate();
+                document.getElementById('personal-type').value = t.personalType || 'invest';
+                document.getElementById('personal-person').value = t.person || '';
+                if (t.personalType === 'invest') {
+                    document.getElementById('personal-invest-amount').value = t.investAmount || 0;
+                    document.getElementById('personal-dividend-amount').value = t.dividendAmount || 0;
+                } else {
+                    document.getElementById('personal-amount').value = t.amount || 0;
+                }
+                document.getElementById('personal-note').value = t.note || '';
+                togglePersonalFields();
+            } else if (t.type === 'custom') {
+                document.getElementById('custom-date').value = t.date || getTodayLocalDate();
+                document.getElementById('custom-nature').value = t.nature || 'income';
+                document.getElementById('custom-amount').value = t.amount || 0;
+                document.getElementById('custom-note').value = t.note || '';
+            }
+        }
+
+        function setBalancePrompt(service) {
+            const current = appState.mfsBalances[service] || 0;
+            const val = prompt(`${service.toUpperCase()} এর প্রারম্ভিক ব্যালেন্স সেট করুন:`, current);
+            if (val !== null && !isNaN(val)) {
+                appState.mfsBalances[service] = Number(val);
+                saveLocalStorage();
+            }
+        }
+
+        function setCashOnHandPrompt() {
+            const val = prompt(`আপনার দোকান ড্রয়ারের প্রাথমিক ক্যাশ সেট করুন:`, appState.cashOnHand || 0);
+            if (val !== null && !isNaN(val)) {
+                appState.cashOnHand = Number(val);
+                saveLocalStorage();
+            }
+        }
+
+        function resetData() {
+            if (confirm('আপনি কি সব ডাটা মুছে নতুন করে শুরু করতে চান?')) {
+                localStorage.removeItem('desh_telecom_data_v53');
+                appState = { mfsBalances: { bkash: 0, nagad: 0, rocket: 0, upay: 0 }, cashOnHand: 0, customCardTitle: "কাস্টম খাত", transactions: [] };
+                updateUI();
+                injectDefaultDatesInHTML();
+                setTodayAllDates();
+                toggleMfsModeFields();
+                togglePersonalFields();
+            }
+        }
+
+        let calcExpr = '';
+        function toggleCalculator() {
+            const modal = document.getElementById('calculator-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function calcInput(val) {
+            if (calcExpr === '0' && !isNaN(val)) calcExpr = '';
+            calcExpr += val;
+            document.getElementById('calc-display').innerText = calcExpr;
+        }
+
+        function calcClear() {
+            calcExpr = '0';
+            document.getElementById('calc-display').innerText = '0';
+            document.getElementById('calc-expression').innerText = '0';
+        }
+
+        function calcBackspace() {
+            calcExpr = calcExpr.slice(0, -1);
+            document.getElementById('calc-display').innerText = calcExpr || '0';
+        }
+
+        function calcEqual() {
+            try {
+                const res = eval(calcExpr);
+                document.getElementById('calc-expression').innerText = calcExpr + ' =';
+                calcExpr = res.toString();
+                document.getElementById('calc-display').innerText = res;
+            } catch (e) {
+                document.getElementById('calc-display').innerText = 'Error';
+                calcExpr = '';
+            }
+        }
+    </script>
+</body>
+</html>
